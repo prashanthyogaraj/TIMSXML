@@ -26,7 +26,8 @@ public class UpdateXml {
 //		startParser();
 		Thread.sleep(1000);
 		UpdateXml xm = new UpdateXml();
-		xm.updateTestcase();
+//		xm.reurnTestCaseFolderID();
+//		xm.updateTestcase();
 		
 		post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
 		xm.returnID();
@@ -51,7 +52,53 @@ public class UpdateXml {
 		
 	
 	}
-	public static void updateTestcase(){
+	public static void createFolder(String foldername,String tstfolder) throws Exception{
+		XMLPoster post = new XMLPoster();
+		String filePath2 = "C:/Users/pyogaraj/Desktop/testfolder.xml";
+		File xmlFile2 = new File(filePath2);
+		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	     DocumentBuilder dBuilder;
+	     try{
+	     dBuilder = dbFactory.newDocumentBuilder();	     
+	     Document doc2 = dBuilder.parse(xmlFile2);	     
+	     doc2.getDocumentElement().normalize();		
+	     createtstfolder(doc2,foldername,tstfolder);
+		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
+         Transformer transformer = transformerFactory.newTransformer();
+         DOMSource source = new DOMSource(doc2);
+         StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+         transformer.transform(source, result);
+         System.out.println("XML file parsed and updated successfully");
+	     }catch(SAXException | ParserConfigurationException | IOException | TransformerException e1){
+	    	 e1.printStackTrace();
+	     }
+	     post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
+	}
+	public static void createResFolder(String foldername,String resfolder) throws Exception{
+		XMLPoster post = new XMLPoster();
+		String filePath2 = "C:/Users/pyogaraj/Desktop/testfolder.xml";
+		File xmlFile2 = new File(filePath2);
+		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	     DocumentBuilder dBuilder;
+	     try{
+	     dBuilder = dbFactory.newDocumentBuilder();	     
+	     Document doc2 = dBuilder.parse(xmlFile2);	     
+	     doc2.getDocumentElement().normalize();		
+	     createresultfolder(doc2,foldername,resfolder);
+		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
+         Transformer transformer = transformerFactory.newTransformer();
+         DOMSource source = new DOMSource(doc2);
+         StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+         transformer.transform(source, result);
+         System.out.println("XML file parsed and updated successfully");
+	     }catch(SAXException | ParserConfigurationException | IOException | TransformerException e1){
+	    	 e1.printStackTrace();
+	     }
+	     post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
+	}
+	public static void uploadTestcase(String folderID,String combination){
 		String filePath2 = "C:/Users/pyogaraj/Desktop/testcase.xml";
 		File xmlFile2 = new File(filePath2);
 		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -60,7 +107,7 @@ public class UpdateXml {
 	     dBuilder = dbFactory.newDocumentBuilder();	     
 	     Document doc2 = dBuilder.parse(xmlFile2);	     
 	     doc2.getDocumentElement().normalize();		 
-		 testcaseupdate(doc2,"VIC 1385____CISCO 1.5 T_INT x710 DA4_INT x550__HGST SN200 6.4TB_SLES 12.2_LOCAL_CISCO 1.5 T + UEFI");		 
+		 testcaseupload(doc2,combination,folderID);		 
 		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
          Transformer transformer = transformerFactory.newTransformer();
          DOMSource source = new DOMSource(doc2);
@@ -74,8 +121,9 @@ public class UpdateXml {
 		
 	}
 	
-	public static void returnID(){
-		String filePath1 = "C:/Users/pyogaraj/Desktop/file1.xml";				
+	public static String returnID(){
+		String filePath1 = "C:/Users/pyogaraj/Desktop/file1.xml";
+		String foldid ="";
 		File xmlFile1 = new File(filePath1);
 		
 		
@@ -91,11 +139,13 @@ public class UpdateXml {
 		 
 		 for(int a=0;a<testid.getLength();a++){
 			 tstid = (Element) testid.item(a);
-			 System.out.println(tstid.getTextContent());
+//			 System.out.println(tstid.getTextContent());
+			 foldid = tstid.getTextContent();
 		 }		 
 	     }catch(Exception e1){
 	    	 e1.printStackTrace();
 	     }
+		return foldid;
 	     
 	}
 	
@@ -180,15 +230,53 @@ public class UpdateXml {
 	    	
 	    }
 	    
-	    public static void testcaseupdate(Document doc2,String combination){
+	    public static void testcaseupload(Document doc2,String combination,String folid){
 	    	System.out.println("insidde testcase update");
 	    	NodeList titleid = doc2.getElementsByTagName("Title");
+	    	NodeList folderid = doc2.getElementsByTagName("FolderID");
 	    	Element title = null;
+	    	Element fol = null;
 	    	for(int i=0;i<titleid.getLength();i++){
 	    		title = (Element) titleid.item(i);
 	    		title.setTextContent(combination);
 	    		
 	    	}
-	    } 
+	    	for(int i=0;i<folderid.getLength();i++){
+	    		fol = (Element) folderid.item(i);
+	    		fol.setTextContent(folid);
+	    		
+	    	}
+	    }
+	    
+	  public static void createtstfolder(Document doc,String foldername,String fldid ){
+		  NodeList fold_name = doc.getElementsByTagName("Title");
+		  NodeList fold_id = doc.getElementsByTagName("FolderID");
+		  Element folder= null;
+		  Element folder_id= null;
+		  for(int i=0;i<fold_name.getLength();i++){
+			  folder = (Element)fold_name.item(i);
+			  folder.setTextContent(foldername);
+		  }
+		  
+		  for(int j=0;j<fold_id.getLength();j++){
+			  folder_id = (Element)fold_id.item(j);
+			  folder_id.setTextContent(fldid);
+		  }
+	  }  
+	  public static void createresultfolder(Document doc,String foldername,String fldid ){
+		  NodeList fold_name = doc.getElementsByTagName("Title");
+		  NodeList fold_id = doc.getElementsByTagName("FolderID");
+		  Element folder= null;
+		  Element folder_id= null;
+		  for(int i=0;i<fold_name.getLength();i++){
+			  folder = (Element)fold_name.item(i);
+			  folder.setTextContent(foldername);
+		  }
+		  
+		  for(int j=0;j<fold_id.getLength();j++){
+			  folder_id = (Element)fold_id.item(j);
+			  folder_id.setTextContent(fldid);
+		  }
+	  }  
 
 }

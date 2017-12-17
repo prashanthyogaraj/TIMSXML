@@ -121,6 +121,29 @@ public class UpdateXml {
 		
 	}
 	
+	public static void uploadResult(String folderID,String combination,String logicalid){
+		String filePath2 = "C:/Users/pyogaraj/Desktop/result.xml";
+		File xmlFile2 = new File(filePath2);
+		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	     DocumentBuilder dBuilder;
+	     try{
+	     dBuilder = dbFactory.newDocumentBuilder();	     
+	     Document doc2 = dBuilder.parse(xmlFile2);	     
+	     doc2.getDocumentElement().normalize();		 
+		 resupload(doc2,combination,folderID,logicalid);		 
+		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
+         Transformer transformer = transformerFactory.newTransformer();
+         DOMSource source = new DOMSource(doc2);
+         StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+         transformer.transform(source, result);
+         System.out.println("XML file parsed and updated successfully");
+	     }catch(SAXException | ParserConfigurationException | IOException | TransformerException e1){
+	    	 e1.printStackTrace();
+	     }
+		
+	}
+	
 	public static String returnID(){
 		String filePath1 = "C:/Users/pyogaraj/Desktop/file1.xml";
 		String foldid ="";
@@ -277,6 +300,36 @@ public class UpdateXml {
 			  folder_id = (Element)fold_id.item(j);
 			  folder_id.setTextContent(fldid);
 		  }
-	  }  
+	  }
+	  
+	  public static void resupload(Document doc,String combination,String fid,String logid){
+		  NodeList restitle = doc.getElementsByTagName("Title");
+		  Element title = null;
+		  for(int i=0;i<restitle.getLength();i++){
+			  title = (Element)restitle.item(i);
+			  title.setTextContent(combination);
+		  }
+		  NodeList logicalid = doc.getElementsByTagName("LogicalID");
+		  Element lid = null;
+		  for(int j=0;j<logicalid.getLength();j++){
+			  lid = (Element)logicalid.item(j);
+			  lid.setTextContent(logid);
+			  
+		  }
+		  NodeList caseid = doc.getElementsByTagName("CaseID");
+		  Element cid = null;
+		  for(int k=0;k<caseid.getLength();k++){
+			  cid = (Element)caseid.item(k);
+			  cid.setAttribute("xlink:href", "");
+			  cid.setAttribute("xlink:href", "http://tims.cisco.com/xml/"+logid+"/entity.svc"+cid.getAttribute("xlink:href"));
+			  cid.setTextContent(logid);
+		  }
+		  NodeList fold_id = doc.getElementsByTagName("FolderID");
+		  Element folder= null;
+		  for(int j=0;j<fold_id.getLength();j++){
+			  folder = (Element)fold_id.item(j);
+			  folder.setTextContent(fid);
+		  }
+	  }
 
 }

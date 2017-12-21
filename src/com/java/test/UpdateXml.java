@@ -31,26 +31,7 @@ public class UpdateXml {
 		
 		post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
 		xm.returnID();
-/*		while(true){
-			Scanner s = new Scanner(System.in);
-			System.out.println("Enter the Test case you need to run \n 1.upload Test Case\n 2.Upload Result\n 3.Exit");
-			int ch = s.nextInt();
-			switch(ch){
-			case 1:
-				System.out.println("Hi i am upload test case");
-				break;
-			case 2:
-				System.out.println("Hi i am upload result");
-				break;
-			case 3:
-				System.out.println("Thank you");
-				System.exit(0);
-				
-			}
 			
-		} */
-		
-	
 	}
 	public static void createFolder(String foldername,String tstfolder) throws Exception{
 		XMLPoster post = new XMLPoster();

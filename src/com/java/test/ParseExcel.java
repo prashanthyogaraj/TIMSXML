@@ -35,43 +35,49 @@ public class ParseExcel {
 	
 	public static void main(String[] args) throws Exception {
 		XMLPoster post = new XMLPoster();
-		ParseExcel ex = new ParseExcel();		
+		ParseExcel ex = new ParseExcel();
+		Scanner s = new Scanner(System.in);
+		System.out.println("Enter your CEC ID: ");
+		String cec = s.nextLine();
 //		ex.getnumberofSheet();
 //		post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
 //		ex.readExcel("Plumas 1", "", "");
 	while(true){
-		Scanner s = new Scanner(System.in);
-		System.out.println("Enter the Test case you need to run \n 1.upload Test Case and result\n 2.Update Test status\n 3.vic regression\n 4.Exit");
+//		Scanner s = new Scanner(System.in);
+//		System.out.println("Enter the Test case you need to run \n 1.upload Test Case and result\n 2.Update Test status in TIMS\n 3.upload vic regression Testcase\n 4.Exit");
+		System.out.println("Enter the Test case you need to run \n 1.Update Test status in TIMS\n 2.Exit");
 		int ch = s.nextInt();
 		switch(ch){
-		case 1:
-			System.out.println("Hi i am upload test case");
+		case 4:
+//			System.exit(0);
+//			System.out.println("Hi i am upload test case");
 			System.out.println("Enter the folder id for testcase to be uploaded");
 			s.nextLine();
 			String oscompattfid = s.nextLine();
 			System.out.println("tfid is"+oscompattfid);
 			System.out.println("Enter the folder id to upload testcase for result");
 			String oscompatrfid = s.nextLine();
-			ex.getnumberofSheet(oscompattfid,oscompatrfid);
+			ex.getnumberofSheet(oscompattfid,oscompatrfid,cec);
+			break;
+		case 1:
+//			System.out.println("Hi i am upload result");
+			UpdateXml xm = new UpdateXml();
+			xm.startParser(cec);			
+			post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/update.svc", "C:/Users/"+cec+"/Desktop/parse_updated.xml",cec);
 			break;
 		case 2:
-			System.out.println("Hi i am upload result");
-			UpdateXml xm = new UpdateXml();
-			xm.startParser();
-			post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/update.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
-			break;
-		case 4:
-			System.out.println("Thank you");
+			System.out.println("Thank you "+cec);
 			System.exit(0);
 		case 3:
-			System.out.println("vic regression");
+//			System.out.println("vic regression");
+			System.exit(0);
 			System.out.println("Enter the folder id for testcase to be uploaded");
 			s.nextLine();
 			String tfid = s.nextLine();
 			System.out.println("tfid is"+tfid);
 			System.out.println("Enter the folder id to upload testcase for result");
 			String rfid = s.nextLine();
-			ex.vicRegressionExcel(tfid,rfid);
+			ex.vicRegressionExcel(tfid,rfid,cec);
 		
 			
 			
@@ -80,10 +86,10 @@ public class ParseExcel {
 	} 
 	}
 
-	public static void getnumberofSheet(String osctfid,String oscrfid) throws Exception{
+	public static void getnumberofSheet(String osctfid,String oscrfid,String cec) throws Exception{
 		UpdateXml xm = new UpdateXml();
-		String filename = "C:/Users/pyogaraj/Desktop/HBMR2.xlsx";
-		FileOutputStream out = new FileOutputStream("C:/Users/pyogaraj/Desktop/HBMR2_updated.xls");
+		String filename = "C:/Users/"+cec+"/Desktop/HBMR2.xlsx";
+		FileOutputStream out = new FileOutputStream("C:/Users/"+cec+"/Desktop/HBMR2_updated.xls");
 		
 		List<String> sheetname = new ArrayList<String>();
 		FileInputStream file = new FileInputStream(new File(filename));
@@ -97,38 +103,38 @@ public class ParseExcel {
 			sheetname.add(wb.getSheetName(i));
 		}
 		
-		for (int a=3;a<sheetname.size()-1;a++){
+		for (int a=0;a<sheetname.size()-1;a++){
 			System.out.println(sheetname.get(a));
 			String servername = sheetname.get(a);
 			String folder_name = sheetname.get(a);
 //			xm.createFolder(folder_name,"Tst11752358f");
-			xm.createFolder(folder_name,osctfid);
-			String testcasefolderid = xm.returnID();
+			xm.createFolder(folder_name,osctfid,cec);
+			String testcasefolderid = xm.returnID(cec);
 			System.out.println(testcasefolderid);
 //			xm.createResFolder(folder_name,"Tst11752357f");
-			xm.createResFolder(folder_name,oscrfid);
-			String resfolid = xm.returnID();
+			xm.createResFolder(folder_name,oscrfid,cec);
+			String resfolid = xm.returnID(cec);
 			System.out.println("resid is"+resfolid);
-			readExcel(servername,testcasefolderid,resfolid,sheet1);
+			readExcel(servername,testcasefolderid,resfolid,sheet1,cec);
 //			readExcel(servername,testcasefolderid,resfolid);
 		}
 		wb.write(out);
 		out.close();
 //		System.out.println("Name of the sheet is"+sheetname);
 	}
-	public static void readExcel(String servername,String testcasefolderid,String resfolderid,XSSFSheet sheet1) throws Exception {
+	public static void readExcel(String servername,String testcasefolderid,String resfolderid,XSSFSheet sheet1,String cec) throws Exception {
 //		String filename = "C:/Users/pyogaraj/Desktop/GPMR2_Plumas.xlsx";//
 		UpdateXml xm = new UpdateXml();
 		XMLPoster post = new XMLPoster();
-		String filename = "C:/Users/pyogaraj/Desktop/HBMR2.xlsx";
+		String filename = "C:/Users/"+cec+"/Desktop/HBMR2.xlsx";
 		ArrayList<String>resultid = new ArrayList<String>();
 		ArrayList<String>testcase = new ArrayList<String>();
 		
 		FileInputStream file = new FileInputStream(new File(filename));
 		XSSFWorkbook wb = new XSSFWorkbook(file);
 //		Sheet sheet = wb.getSheetAt(3);
-//		Sheet sheet = wb.getSheet(servername);
-		Sheet sheet = wb.getSheet("S3260M5");
+		Sheet sheet = wb.getSheet(servername);
+//		Sheet sheet = wb.getSheet("S3260M5");
 		
 		
 		
@@ -170,17 +176,17 @@ public class ParseExcel {
 						String combination =heading+"_"+cell.getStringCellValue()+"_"+row.getCell(0).getStringCellValue()+"_"+cell.getCellComment().getString();		
 						
 						System.out.println("combination is"+combination);
-						xm.uploadTestcase(testcasefolderid,combination);
-						post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
-						String testresid = xm.returnID();
-						xm.uploadResult(resfolderid, combination, testresid);
-						post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
-						String finalresid = xm.returnID();
+						xm.uploadTestcase(testcasefolderid,combination,cec);
+						post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/"+cec+"/Desktop/parse_updated.xml",cec);
+						String testresid = xm.returnID(cec);
+						xm.uploadResult(resfolderid, combination, testresid,cec);
+						post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/"+cec+"/Desktop/parse_updated.xml",cec);
+						String finalresid = xm.returnID(cec);
 //						System.exit(0);
 //					    hparse.put(finalresid, combination);
 						resultid.add(finalresid);
 						testcase.add(combination);
-//						break;
+						break;
 						
 						}
 						
@@ -220,12 +226,12 @@ public class ParseExcel {
 
 	}
 	
-	public void vicRegressionExcel(String testreleasefolderid,String resultreleasefolderid) throws Exception{
+	public void vicRegressionExcel(String testreleasefolderid,String resultreleasefolderid,String cec) throws Exception{
 		UpdateXml xm = new UpdateXml();
 		XMLPoster post = new XMLPoster();
 		
-		String filename = "C:/Users/pyogaraj/Desktop/vic.xlsx";
-		FileOutputStream out = new FileOutputStream("C:/Users/pyogaraj/Desktop/vic_updated.xls");
+		String filename = "C:/Users/"+cec+"/Desktop/vic.xlsx";
+		FileOutputStream out = new FileOutputStream("C:/Users/"+cec+"/Desktop/vic_updated.xls");
 		
 		List<String> sheetname = new ArrayList<String>();
 		HashMap<Integer, List<String>> parse = new HashMap<Integer, List<String>>();
@@ -248,14 +254,14 @@ public class ParseExcel {
 			String folder_name = sheetname.get(a);
 			
 //			xm.createFolder(folder_name,"Tst11752358f");
-			xm.createFolder(folder_name,testreleasefolderid);
-			String testcasefolderid = xm.returnID();
+			xm.createFolder(folder_name,testreleasefolderid,cec);
+			String testcasefolderid = xm.returnID(cec);
 			System.out.println(testcasefolderid);
 //			xm.createResFolder(folder_name,"Tst11752357f");
-			xm.createResFolder(folder_name,resultreleasefolderid);
-			String resfolid = xm.returnID();
+			xm.createResFolder(folder_name,resultreleasefolderid,cec);
+			String resfolid = xm.returnID(cec);
 //			System.out.println("resid is"+resfolid);
-			readvicexcel(folder_name,testcasefolderid,resfolid,sheet1);
+			readvicexcel(folder_name,testcasefolderid,resfolid,sheet1,cec);
 			
 		}
 		wb.write(out);
@@ -263,12 +269,12 @@ public class ParseExcel {
 		
 	}
 	
-	public void  readvicexcel(String servername,String tstfolderid,String resfolderid,XSSFSheet sheet1) throws Exception{
+	public void  readvicexcel(String servername,String tstfolderid,String resfolderid,XSSFSheet sheet1,String cec) throws Exception{
 		UpdateXml xm = new UpdateXml();
 		int rowid;
 		XMLPoster post = new XMLPoster();
-		String filename = "C:/Users/pyogaraj/Desktop/vic.xlsx";
-		FileOutputStream out = new FileOutputStream("C:/Users/pyogaraj/Desktop/vic_updated.xls");
+		String filename = "C:/Users/"+cec+"/Desktop/vic.xlsx";
+		FileOutputStream out = new FileOutputStream("C:/Users/"+cec+"/Desktop/vic_updated.xls");
 		
 		ArrayList<String>resultid = new ArrayList<String>();
 		ArrayList<String>testcase = new ArrayList<String>();
@@ -311,12 +317,12 @@ public class ParseExcel {
 			
 		
 			System.out.println("combination is"+combination);		
-			xm.uploadTestcase(tstfolderid,combination);
-			post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
-			String testresid = xm.returnID();
-			xm.uploadResult(resfolderid, combination, testresid);
-			post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
-			String finalresid = xm.returnID();
+			xm.uploadTestcase(tstfolderid,combination,cec);
+			post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/"+cec+"/Desktop/parse_updated.xml",cec);
+			String testresid = xm.returnID(cec);
+			xm.uploadResult(resfolderid, combination, testresid,cec);
+			post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/"+cec+"/Desktop/parse_updated.xml",cec);
+			String finalresid = xm.returnID(cec);
 //			hparse.put(finalresid, combination);
 						
 //			XSSFRichTextString st = new XSSFRichTextString("Hello"+i);

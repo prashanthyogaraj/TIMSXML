@@ -20,7 +20,7 @@ public class XMLPoster
 {
 	public static void main(String[] args) throws Exception{
 		XMLPoster post = new XMLPoster();
-		post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/update.svc", "C:/Users/pyogaraj/Desktop/testcase.xml");
+		post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/update.svc", "C:/Users/pyogaraj/Desktop/testcase.xml","");
 	 //http://tims.cisco.com/xml/Tst531p/entity.svc	
 		//http://tims.cisco.com/xml/Tst531p/update.svc
 		
@@ -31,7 +31,7 @@ public class XMLPoster
      * @param fileContents
      * @exception Exception for any errors
      */
-    public String postXMLToUrl(String url, String fileContents) throws Exception
+    public String postXMLToUrl(String url, String fileContents,String cec) throws Exception
     {
 		System.out.println("begin postXMLToUrl");
         // write file to filesystem.
@@ -64,7 +64,7 @@ public class XMLPoster
         /* Hold response as a String in case we need to inspect it for debugging */
         String response = new String(os.toByteArray());
 		System.out.println("XMLPoster: "+response);
-        saveResponse(url, response);
+        saveResponse(url, response,cec);
         if (responseCode != 200)
         {
             throw new Exception("Server claimed that request failed with response code of " + responseCode);
@@ -80,11 +80,11 @@ public class XMLPoster
      * @return
      * @throws Exception
      */
-    public String sendToServer(String url, String meatOfRequest) throws Exception
+    public String sendToServer(String url, String meatOfRequest,String cec) throws Exception
     {
         //String postXml = getPostHeader() + meatOfRequest + getPostFooter();
 		String postXml =  meatOfRequest ;
-        return postXMLToUrl(url, postXml);
+        return postXMLToUrl(url, postXml,cec);
     }
     
     /**
@@ -130,9 +130,9 @@ public class XMLPoster
      * @param message
      * @throws IOException
      */
-    private void saveResponse(String url, String message) throws IOException
+    private void saveResponse(String url, String message,String cec) throws IOException
     {
-        saveMessage(url, message, "response");
+        saveMessage(url, message, "response",cec);
     }
     
     /**
@@ -141,9 +141,9 @@ public class XMLPoster
      * @param message
      * @throws IOException
      */
-    private void saveRequest(String url, String message) throws IOException
+    private void saveRequest(String url, String message,String cec) throws IOException
     {
-        saveMessage(url, message, "request");
+        saveMessage(url, message, "request",cec);
     }
     
     /**
@@ -153,7 +153,7 @@ public class XMLPoster
      * @param type
      * @throws IOException for filesystem errors
      */
-    private void saveMessage(String url, String message, String type) throws IOException
+    private void saveMessage(String url, String message, String type,String cec) throws IOException
     {
        /*
 		if (!TestConstants.WRITE_FILES)
@@ -165,7 +165,7 @@ public class XMLPoster
 		String desiredFilename = "test_response";
         String filenameWithCount = addCountToFileName(desiredFilename);
         //writeFile(TestConstants.SENT_DIRECTORY+filenameWithCount + "_" + type + ".xml", message);
-		writeFile("C:/Users/pyogaraj/Desktop/file1.xml", message);
+		writeFile("C:/Users/"+cec+"/Desktop/file1.xml", message);
     }
     
     /**

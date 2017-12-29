@@ -29,13 +29,13 @@ public class UpdateXml {
 //		xm.reurnTestCaseFolderID();
 //		xm.updateTestcase();
 		
-		post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
-		xm.returnID();
+		post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml","");
+		xm.returnID("pyogaraj");
 			
 	}
-	public static void createFolder(String foldername,String tstfolder) throws Exception{
+	public static void createFolder(String foldername,String tstfolder,String cecid) throws Exception{
 		XMLPoster post = new XMLPoster();
-		String filePath2 = "C:/Users/pyogaraj/Desktop/testfolder.xml";
+		String filePath2 = "C:/Users/"+cecid+"/Desktop/testfolder.xml";
 		File xmlFile2 = new File(filePath2);
 		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	     DocumentBuilder dBuilder;
@@ -47,18 +47,18 @@ public class UpdateXml {
 		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
          Transformer transformer = transformerFactory.newTransformer();
          DOMSource source = new DOMSource(doc2);
-         StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+         StreamResult result = new StreamResult(new File("C:/Users/"+cecid+"/Desktop/parse_updated.xml"));
          transformer.setOutputProperty(OutputKeys.INDENT, "yes");
          transformer.transform(source, result);
          System.out.println("XML file parsed and updated successfully");
 	     }catch(SAXException | ParserConfigurationException | IOException | TransformerException e1){
 	    	 e1.printStackTrace();
 	     }
-	     post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
+	     post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/"+cecid+"/Desktop/parse_updated.xml",cecid);
 	}
-	public static void createResFolder(String foldername,String resfolder) throws Exception{
+	public static void createResFolder(String foldername,String resfolder,String cecid) throws Exception{
 		XMLPoster post = new XMLPoster();
-		String filePath2 = "C:/Users/pyogaraj/Desktop/testfolder.xml";
+		String filePath2 = "C:/Users/"+cecid+"/Desktop/testfolder.xml";
 		File xmlFile2 = new File(filePath2);
 		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	     DocumentBuilder dBuilder;
@@ -70,17 +70,17 @@ public class UpdateXml {
 		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
          Transformer transformer = transformerFactory.newTransformer();
          DOMSource source = new DOMSource(doc2);
-         StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+         StreamResult result = new StreamResult(new File("C:/Users/"+cecid+"/Desktop/parse_updated.xml"));
          transformer.setOutputProperty(OutputKeys.INDENT, "yes");
          transformer.transform(source, result);
          System.out.println("XML file parsed and updated successfully");
 	     }catch(SAXException | ParserConfigurationException | IOException | TransformerException e1){
 	    	 e1.printStackTrace();
 	     }
-	     post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/pyogaraj/Desktop/parse_updated.xml");
+	     post.postXMLToUrl("http://tims.cisco.com/xml/Tst531p/entity.svc", "C:/Users/"+cecid+"/Desktop/parse_updated.xml",cecid);
 	}
-	public static void uploadTestcase(String folderID,String combination){
-		String filePath2 = "C:/Users/pyogaraj/Desktop/testcase.xml";
+	public static void uploadTestcase(String folderID,String combination,String cecid){
+		String filePath2 = "C:/Users/"+cecid+"/Desktop/testcase.xml";
 		File xmlFile2 = new File(filePath2);
 		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	     DocumentBuilder dBuilder;
@@ -92,7 +92,7 @@ public class UpdateXml {
 		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
          Transformer transformer = transformerFactory.newTransformer();
          DOMSource source = new DOMSource(doc2);
-         StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+         StreamResult result = new StreamResult(new File("C:/Users/"+cecid+"/Desktop/parse_updated.xml"));
          transformer.setOutputProperty(OutputKeys.INDENT, "yes");
          transformer.transform(source, result);
          System.out.println("XML file parsed and updated successfully");
@@ -102,8 +102,8 @@ public class UpdateXml {
 		
 	}
 	
-	public static void uploadResult(String folderID,String combination,String logicalid){
-		String filePath2 = "C:/Users/pyogaraj/Desktop/result.xml";
+	public static void uploadResult(String folderID,String combination,String logicalid,String cecid){
+		String filePath2 = "C:/Users/"+cecid+"/Desktop/result.xml";
 		File xmlFile2 = new File(filePath2);
 		 DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	     DocumentBuilder dBuilder;
@@ -115,7 +115,7 @@ public class UpdateXml {
 		 TransformerFactory transformerFactory = TransformerFactory.newInstance();
          Transformer transformer = transformerFactory.newTransformer();
          DOMSource source = new DOMSource(doc2);
-         StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+         StreamResult result = new StreamResult(new File("C:/Users/"+cecid+"/Desktop/parse_updated.xml"));
          transformer.setOutputProperty(OutputKeys.INDENT, "yes");
          transformer.transform(source, result);
          System.out.println("XML file parsed and updated successfully");
@@ -125,8 +125,8 @@ public class UpdateXml {
 		
 	}
 	
-	public static String returnID(){
-		String filePath1 = "C:/Users/pyogaraj/Desktop/file1.xml";
+	public static String returnID(String cecid){
+		String filePath1 = "C:/Users/"+cecid+"/Desktop/file1.xml";
 		String foldid ="";
 		File xmlFile1 = new File(filePath1);
 		
@@ -153,8 +153,8 @@ public class UpdateXml {
 	     
 	}
 	
-	public static void startParser(){
-        String filePath = "C:/Users/pyogaraj/Desktop/test1.xml";
+	public static void startParser(String cecid){
+        String filePath = "C:/Users/"+cecid+"/Desktop/test1.xml";
         
         
         File xmlFile = new File(filePath);
@@ -168,15 +168,17 @@ public class UpdateXml {
             
             doc.getDocumentElement().normalize();          
 //            
-            System.out.println("Enter the id please");
+            System.out.println("Enter the Test case id please");
             Scanner s = new Scanner(System.in);
             String id = s.nextLine();	
             System.out.println("Enter the status");
             String status = s.nextLine();
+            System.out.println("Enter the title please");
+            String title = s.nextLine();
            //update Id
             updateId(doc,id);
             //update value            
-            updateValue(doc,id,status);
+            updateValue(doc,id,status,title);
             
            
             //write the updated document to file or console
@@ -184,7 +186,7 @@ public class UpdateXml {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("C:/Users/pyogaraj/Desktop/parse_updated.xml"));
+            StreamResult result = new StreamResult(new File("C:/Users/"+cecid+"/Desktop/parse_updated.xml"));
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(source, result);
             System.out.println("XML file updated successfully");
@@ -195,10 +197,11 @@ public class UpdateXml {
     	
     }
 	
-	  public static void updateValue(Document doc,String timsid,String status){
+	  public static void updateValue(Document doc,String timsid,String status,String title){
 	    	NodeList tagid = doc.getElementsByTagName("ID");
 	    	NodeList logicalid = doc.getElementsByTagName("LogicalID");
 	    	NodeList tagstat = doc.getElementsByTagName("Status");
+	    	NodeList tagtitle = doc.getElementsByTagName("Title");
 	    	Element tag = null;
 	    	
 	    	for(int i=0;i<tagid.getLength();i++){
@@ -214,11 +217,18 @@ public class UpdateXml {
 	    		tag.setTextContent(status);
 	    	}
 	    	
+	    	for(int k=0;k<tagtitle.getLength();k++){
+	    		tag = (Element) tagtitle.item(k);
+	    		tag.setTextContent(title);
+	    	}
+	    	
 	    }
 	    public static void updateId(Document doc,String timsid){
 	    	NodeList tagid = doc.getElementsByTagName("ID");
-	    	NodeList tagresult = doc.getElementsByTagName("Result");
+	    	NodeList tagresult = doc.getElementsByTagName("Result");	    	
 	    	Element em = null;
+	    	
+	    	
 	    	
 	    	for(int i=0;i<tagid.getLength();i++){
 	    		em = (Element) tagid.item(i);
